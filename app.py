@@ -1,0 +1,58 @@
+import streamlit as st
+import pandas as pd
+
+FICHIER = "data/livres_poetry.csv"
+#Etape 1
+@st.cache_data
+def charger_donnees(chemin) : 
+    return pd.read_csv(chemin)
+
+df = charger_donnees(FICHIER)
+
+st.set_page_config(page_title="Catalogue", page_icon = "U+1F4DA", layout="wide")
+
+st.title("Catalogue de livres")
+
+#Etape 2
+with st.sidebar : 
+    st.header("Filtres")
+    note_mini = st.slider("Note minimale", 1,5,1)
+    prix_max = st.slider("Prix maximum", 0.0, 60.0, 60.0)
+    recherche = st.text_input("Le titre contient")
+
+
+selection = df.copy()
+selection = selection[selection["note"]>= note_mini]
+selection = selection[selection["prix_gbp"] <= prix_max]
+
+if recherche :
+    selection = selection[selection["titre"].str.contains(recherche,case=False )]
+
+#Etape 5
+if len(selection) ==0 : 
+    st.warning("Aucun libre ne correspond à ces critères")
+else : 
+    st.write("Livres retenus :", len(selection), "sur", len(df))
+    st.dataframe(selection)
+    #Etape 3
+    col1, col2, col3, col4 = st.columns(4)
+
+    col1.metric("Livres", len(selection))
+    col2.metric("Prix moyen", f"{selection['prix_gbp'].mean():.2f} GBP")
+    col3.metric("Note moyenne", f"{selection['note'].mean():.2f} / 5")
+    col4.metric("Stock moyen disponible", f"{selection['stock'].mean():.2f}")
+
+#Etape 4
+gauche, droite = st.columns(2)
+
+with gauche:
+    st.subheader("Les mieux notes")
+    st.dataframe(selection.nlargest(5, "note")[["titre", "note"]])
+
+with droite:
+    st.subheader("Les moins chers")
+    st.dataframe(selection.nsmallest(5, "prix_gbp")[["titre", "prix_gbp"]])
+
+
+with st.expander("Voir les donnees brutes"):
+    st.dataframe(df)
