@@ -30,7 +30,7 @@ if recherche :
 
 #Etape 5
 if len(selection) ==0 : 
-    st.warning("Aucun libre ne correspond à ces critères")
+    st.warning("Aucun livre ne correspond à ces critères")
 else : 
     st.write("Livres retenus :", len(selection), "sur", len(df))
     st.dataframe(selection)
@@ -53,6 +53,6 @@ with droite:
     st.subheader("Les moins chers")
     st.dataframe(selection.nsmallest(5, "prix_gbp")[["titre", "prix_gbp"]])
 
-
+#Etape 6
 with st.expander("Voir les donnees brutes"):
     st.dataframe(df)
