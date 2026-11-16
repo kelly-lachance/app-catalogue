@@ -2,7 +2,6 @@
 
 Applications Streamlit pour explorer un petit catalogue de 19 livres de poésie : prix, note sur 5 et stock disponible.
 
-<img width="1901" height="902" alt="Aperçu de l'application" src="https://github.com/user-attachments/assets/41178b16-d813-4df5-b3c3-9e2fe034e40f" />
 
 ## Les trois applications
 
