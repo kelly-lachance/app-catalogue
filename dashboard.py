@@ -22,6 +22,19 @@ with st.sidebar :
     prix_max = st.slider("Prix maximum", 0.0, 60.0, 60.0)
     recherche = st.text_input("Le titre contient")
 
+selection = df.copy()
+selection = selection[selection["note"]>= note_mini]
+selection = selection[selection["prix_gbp"] <= prix_max]
+
+if recherche :
+    selection = selection[selection["titre"].str.contains(recherche,case=False )]
+
+#Etape 5
+if len(selection) ==0 : 
+    st.warning("Aucun livre ne correspond à ces critères")
+else : 
+    st.write("Livres retenus :", len(selection), "sur", len(df))
+
 gauche, droite = st.columns(2)
 with gauche:
     variables = {"note" : "Note", "prix_gbp" : "Prix (GBP)", "stock" : "Stock"}
@@ -29,7 +42,7 @@ with gauche:
     libelle = variables[var_x]
     st.subheader(f"Comment se distribue la variable {libelle} ?")
     fig, ax = plt.subplots(figsize=(8,4))
-    ax.hist(df[var_x], bins=10, color="#4C72B0", edgecolor="white")
+    ax.hist(selection[var_x], bins=10, color="#4C72B0", edgecolor="white")
     ax.set_xlabel(f"{libelle}")
     ax.set_ylabel("Nombre de livres")
     ax.set_title(f"Distribution de {var_x} du catalogue")
@@ -44,7 +57,7 @@ with gauche:
 
 with droite:
     type_graphique = st.radio("Type de graphique", ["Barres", "Secteurs"], horizontal=True)
-    par_note=df["note"].value_counts().sort_index().rename_axis("note").reset_index(name="nombre")
+    par_note=selection["note"].value_counts().sort_index().rename_axis("note").reset_index(name="nombre")
     st.subheader("combien de livres par note ?")
     if type_graphique == "Barres" : 
         graphique = px.bar(par_note, x="note", y="nombre", labels={"note" : "Note", "nombre" : "Nombre de livres"})
@@ -55,7 +68,7 @@ with droite:
 
 st.subheader("le prix et la note vont-ils ensemble ?")
 fig = px.scatter(
-    df,
+    selection,
     x="prix_gbp",
     y="note",
     size="stock",
