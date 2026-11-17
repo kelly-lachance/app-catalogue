@@ -19,6 +19,8 @@ selection=df[df["note"]>=note_mini]
 if len(selection) ==0:
     st.warning("Aucun livre ne correspond.")
     st.stop()
+
+    
 fig = px.histogram(
     selection,
     x="prix_gbp",

@@ -32,6 +32,7 @@ if recherche :
 #Etape 5
 if len(selection) ==0 : 
     st.warning("Aucun livre ne correspond à ces critères")
+    st.stop()
 else : 
     st.write("Livres retenus :", len(selection), "sur", len(df))
 
