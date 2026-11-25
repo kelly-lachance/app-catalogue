@@ -2,6 +2,17 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
+from streamlit_option_menu import option_menu
+
+selection = option_menu(
+    menu_title = None,
+    options = ["Accueil", "Photos"],
+)
+
+if selection == "Accueil" : 
+    st.write("Bienvenue sur la page d'accueil !")
+elif selection =="Photos" : 
+    st.write("Bienvenue sur mon album photo")
 
 FICHIER = "data/livres_poetry.csv"
 #Etape 1
@@ -30,7 +41,7 @@ if recherche :
     selection = selection[selection["titre"].str.contains(recherche,case=False )]
 
 #Etape 5
-if len(selection) ==0 : 
+if len(selection) == 0 : 
     st.warning("Aucun livre ne correspond à ces critères")
     st.stop()
 else : 
